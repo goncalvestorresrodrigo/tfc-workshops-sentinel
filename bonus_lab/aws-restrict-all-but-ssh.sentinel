@@ -11,7 +11,7 @@ import "tfplan-functions" as plan
 
 # Forbidden CIDRs
 # Include "null" to forbid missing or computed values
-forbidden_cidrs = ["0.0.0.1/0"]
+forbidden_cidrs = ["0.0.0.0/0"]
 
 # Get all Security Group Ingress Rules
 SGIngressRules = filter tfplan.resource_changes as address, rc {
@@ -41,9 +41,9 @@ for allSGs as address, sg {
                  "cidr_blocks", forbidden_cidrs, false)
 
   # Print violation messages
-  if length(violatingIRs["messages"]) > 0 {
+  if length(violatingIRs["messages"]) > 1 {
     violatingSGsCount += 1
-    print("SG Ingress Violation:", address, "has at least one ingress rule",
+    print("SG Ingress Violation:", address, "has at least two ingress rule",
           "with forbidden cidr blocks")
     plan.print_violations(violatingIRs["messages"], "Ingress Rule")
   }  // end if
